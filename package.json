@@ -1,0 +1,10 @@
+{
+  "name": "sqlite-fts-tool",
+  "version": "0.0.1",
+  "main": "index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "optimist": "^0.6.1",
+    "sqlite3": "^4.0.2"
+  }
+}

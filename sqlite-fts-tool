@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+let sqlite3 = require('sqlite3').verbose();
+let fs = require('fs');
+
+let optimist = require('optimist')
+    .usage('Usage: $0 --database [database] --input [table name] --output [table name]')
+    .demand(['database', 'input', 'output']);
+
+let argv = optimist.argv;
+let database = argv.database;
+let input = argv.input;
+let output = argv.output;
+
+if (!fs.existsSync(database)) {
+    console.log(`file ${database} not exists.`);
+    process.exit(1);
+}
+
+let db = new sqlite3.Database(database);
+
+db.serialize(function() {
+  db.run(`CREATE VIRTUAL TABLE IF NOT EXISTS ${output} USING fts4(content="${input}", CODE, NAME)`);
+  db.run(`INSERT INTO ${output}(${output}) VALUES('rebuild')`);
+  db.run(`INSERT INTO ${output}(${output}) VALUES('optimize')`);
+});  
+
+db.close();
