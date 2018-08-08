@@ -20,7 +20,8 @@ if (!fs.existsSync(database)) {
 let db = new sqlite3.Database(database);
 
 db.serialize(function() {
-  db.run(`CREATE VIRTUAL TABLE IF NOT EXISTS ${output} USING fts4(content="${input}", CODE, NAME)`);
+  db.run(`DROP TABLE ${output}`)
+  db.run(`CREATE VIRTUAL TABLE ${output} USING fts4(content="${input}", prefix="2,4,8", CODE, NAME)`);
   db.run(`INSERT INTO ${output}(${output}) VALUES('rebuild')`);
   db.run(`INSERT INTO ${output}(${output}) VALUES('optimize')`);
 });  
